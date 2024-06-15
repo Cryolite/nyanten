@@ -1,0 +1,10 @@
+/src/standard/build_table
+/src/standard/test_hash
+/src/standard/build_map
+/src/standard/test_correctness.debug
+/src/standard/test_correctness.release
+/src/standard/test_speed_empty
+/src/standard/test_speed_baseline
+/src/standard/test_speed_proposed
+/src/calsht.debug.o
+/src/calsht.release.o
