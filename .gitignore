@@ -8,3 +8,5 @@
 /src/standard/test_speed_proposed
 /src/calsht.debug.o
 /src/calsht.release.o
+/src/test_correctness.debug
+/src/test_correctness.release

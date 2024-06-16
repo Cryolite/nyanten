@@ -39,7 +39,7 @@ int main(int const argc, char const * const * const argv)
   Calsht calculator0;
   calculator0.initialize("../shanten-number");
 
-  Nyanten::Standard_::Calculator calculator1("src/standard/map.bin");
+  Nyanten::Standard_::Calculator calculator1("map.bin");
 
   for (std::size_t i = 0u; i < num_tests; ++i) {
     std::vector<int> const hand = createRandomPureHand(rng);
@@ -47,7 +47,7 @@ int main(int const argc, char const * const * const argv)
     std::uint_fast8_t const m = n / 3u;
 
     std::uint_fast8_t const shanten0 = calculator0.calc_lh(hand.data(), m);
-    std::uint_fast8_t const shanten1 = calculator1(hand.cbegin(), hand.cend());
+    std::uint_fast8_t const shanten1 = calculator1(hand.cbegin(), hand.cend(), n);
     if (shanten0 != shanten1) {
       std::cerr << "Hand: ";
       for (int const tile : hand) {

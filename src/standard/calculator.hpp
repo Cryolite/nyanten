@@ -10,8 +10,11 @@
 #include <ios>
 #include <algorithm>
 #include <array>
+#include <utility>
+#include <memory>
 #include <stdexcept>
 #include <cstdint>
+#include <cassert>
 
 
 namespace Nyanten::Standard_ {
@@ -36,32 +39,64 @@ Unpack unpackReplacementNumbers(std::uint64_t pack)
 class Calculator
 {
 public:
+  Calculator() = delete;
+
   explicit Calculator(std::filesystem::path const &path)
-    : shupai_map_(shupai_size)
-    , zipai_map_(zipai_size)
+    : p_shupai_map_(std::make_shared<Map>(shupai_size))
+    , p_zipai_map_(std::make_shared<Map>(zipai_size))
   {
+    using Value = Map::value_type;
+
     std::ifstream ifs(path, std::ios::binary);
     if (!ifs) {
       throw std::runtime_error("Failed to open the map file.");
     }
 
     ifs.read(
-      reinterpret_cast<char *>(shupai_map_.data()), shupai_map_.size() * sizeof(std::uint64_t));
+      reinterpret_cast<char *>(p_shupai_map_->data()), p_shupai_map_->size() * sizeof(Value));
     if (!ifs) {
       throw std::runtime_error("Failed to read the map file.");
     }
-    if (ifs.gcount() != static_cast<long>(shupai_map_.size() * sizeof(std::uint64_t))) {
+    if (ifs.gcount() != static_cast<std::streamsize>(p_shupai_map_->size() * sizeof(Value))) {
       throw std::runtime_error("Failed to read the map file.");
     }
 
-    ifs.read(
-      reinterpret_cast<char *>(zipai_map_.data()), zipai_map_.size() * sizeof(std::uint64_t));
+    ifs.read(reinterpret_cast<char *>(p_zipai_map_->data()), p_zipai_map_->size() * sizeof(Value));
     if (!ifs) {
       throw std::runtime_error("Failed to read the map file.");
     }
-    if (ifs.gcount() != static_cast<long>(zipai_map_.size() * sizeof(std::uint64_t))) {
+    if (ifs.gcount() != static_cast<std::streamsize>(p_zipai_map_->size() * sizeof(Value))) {
       throw std::runtime_error("Failed to read the map file.");
     }
+  }
+
+  Calculator(Calculator const &) noexcept = default;
+
+  Calculator(Calculator &&rhs) noexcept
+    : Calculator(std::as_const(rhs))
+  {}
+
+  void swap(Calculator &rhs) noexcept
+  {
+    p_shupai_map_.swap(rhs.p_shupai_map_);
+    p_zipai_map_.swap(rhs.p_zipai_map_);
+  }
+
+  friend void swap(Calculator &lhs, Calculator &rhs) noexcept
+  {
+    lhs.swap(rhs);
+  }
+
+  Calculator &operator=(Calculator const &rhs) noexcept
+  {
+    Calculator(rhs).swap(*this);
+    return *this;
+  }
+
+  Calculator &operator=(Calculator &&rhs) noexcept
+  {
+    swap(rhs);
+    return *this;
   }
 
 private:
@@ -91,47 +126,30 @@ private:
 
 public:
   template<typename ForwardIterator>
-  std::uint_fast8_t operator()(ForwardIterator first, ForwardIterator last) const
+  std::uint_fast8_t operator()(
+    ForwardIterator first, ForwardIterator last, std::uint_fast8_t const n) const
   {
-    std::uint_fast8_t const n = [&]() {
-      std::uint_fast8_t i = 0u;
-      std::uint_fast8_t n = 0u;
-      for (ForwardIterator iter = first; iter != last; ++iter) {
-        if (*iter > 4) {
-          throw std::invalid_argument("An invalid hand.");
-        }
-        ++i;
-        n += *iter;
-      }
-      if (i != 34u) {
-        throw std::invalid_argument("An invalid hand.");
-      }
-      if (n > 14u) {
-        throw std::invalid_argument("An invalid hand.");
-      }
-      if (n % 3u == 0u) {
-        throw std::invalid_argument("An invalid hand.");
-      }
-      return n;
-    }();
+    assert((!!p_shupai_map_));
+    assert((!!p_zipai_map_));
+
     std::uint_fast8_t const m = n / 3u;
 
     std::uint_fast32_t const h0 = hashShupai(first, first + 9u);
-    std::uint64_t const pack0 = shupai_map_[h0];
+    std::uint64_t const pack0 = (*p_shupai_map_)[h0];
     Unpack unpack0 = unpackReplacementNumbers(pack0);
 
     std::uint_fast32_t const h1 = hashShupai(first + 9u, first + 18u);
-    std::uint64_t const pack1 = shupai_map_[h1];
+    std::uint64_t const pack1 = (*p_shupai_map_)[h1];
     Unpack const unpack1 = unpackReplacementNumbers(pack1);
     add_(unpack0, unpack1);
 
     std::uint_fast32_t const h2 = hashShupai(first + 18u, first + 27u);
-    std::uint64_t const pack2 = shupai_map_[h2];
+    std::uint64_t const pack2 = (*p_shupai_map_)[h2];
     Unpack const unpack2 = unpackReplacementNumbers(pack2);
     add_(unpack0, unpack2);
 
     std::uint_fast32_t const h3 = hashZipai(first + 27u, first + 34u);
-    std::uint64_t const pack3 = zipai_map_[h3];
+    std::uint64_t const pack3 = (*p_zipai_map_)[h3];
     Unpack const unpack3 = unpackReplacementNumbers(pack3);
     add_(unpack0, unpack3);
 
@@ -139,8 +157,8 @@ public:
   }
 
 private:
-  Map shupai_map_;
-  Map zipai_map_;
+  std::shared_ptr<Map> p_shupai_map_;
+  std::shared_ptr<Map> p_zipai_map_;
 }; // class Calculator
 
 } // namespace Nyanten::Standard_

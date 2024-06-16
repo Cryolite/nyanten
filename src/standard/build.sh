@@ -10,14 +10,12 @@ ASAN_OPTIONS=handle_abort=1 src/standard/test_hash
 
 g++ -o src/standard/build_map -std=c++23 -O3 src/standard/build_map.cpp
 src/standard/build_map
-cat src/standard/shupai_map.bin src/standard/zipai_map.bin > src/standard/map.bin
+cat src/standard/shupai_map.bin src/standard/zipai_map.bin > map.bin
 rm -f src/standard/shupai_map.bin src/standard/zipai_map.bin
 
-g++ -o src/calsht.debug.o -c -std=c++23 -D_GLIBCXX_DEBUG -I../shanten-number/src -Wall -g -fsanitize=address -fsanitize=undefined ../shanten-number/src/calsht.cpp
 g++ -o src/standard/test_correctness.debug -std=c++23 -D_GLIBCXX_DEBUG -I../shanten-number/src -Wall -g -fsanitize=address -fsanitize=undefined src/standard/test_correctness.cpp src/calsht.debug.o
 ASAN_OPTIONS=handle_abort=1 src/standard/test_correctness.debug 1000000
 
-g++ -o src/calsht.release.o -c -std=c++23 -I../shanten-number/src -O3 ../shanten-number/src/calsht.cpp
 g++ -o src/standard/test_correctness.release -std=c++23 -I../shanten-number/src -O3 src/standard/test_correctness.cpp src/calsht.release.o
 src/standard/test_correctness.release 100000000
 
