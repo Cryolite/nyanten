@@ -1,3 +1,7 @@
+// Copyright (c) 2024 Cryolite. All rights reserved.
+// SPDX-License-Identifier: MIT
+// This file is part of https://github.com/Cryolite/nyanten
+
 #if !defined(NYANTEN_SEVEN_PAIRS_REPLACEMENT_NUMBER_HPP_INCLUDE_GUARD)
 #define NYANTEN_SEVEN_PAIRS_REPLACEMENT_NUMBER_HPP_INCLUDE_GUARD
 

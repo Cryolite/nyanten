@@ -1,3 +1,7 @@
+// Copyright (c) 2024 Cryolite. All rights reserved.
+// SPDX-License-Identifier: MIT
+// This file is part of https://github.com/Cryolite/nyanten
+
 #if !defined(NYANTEN_STANDARD_CALCULATOR_HPP_INCLUDE_GUARD)
 #define NYANTEN_STANDARD_CALCULATOR_HPP_INCLUDE_GUARD
 

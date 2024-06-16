@@ -1,3 +1,7 @@
+// Copyright (c) 2024 Cryolite. All rights reserved.
+// SPDX-License-Identifier: MIT
+// This file is part of https://github.com/Cryolite/nyanten
+
 #include "hash.hpp"
 #include "zipai_table.hpp"
 #include "shupai_table.hpp"

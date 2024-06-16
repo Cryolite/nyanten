@@ -1,3 +1,7 @@
+// Copyright (c) 2024 Cryolite. All rights reserved.
+// SPDX-License-Identifier: GPL-3.0-or-later
+// This file is part of https://github.com/Cryolite/nyanten
+
 #include "calculator.hpp"
 #include "../core.hpp"
 #include <calsht.hpp>
