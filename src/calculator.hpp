@@ -84,6 +84,12 @@ public:
     return std::min({r0, r1, r2});
   }
 
+  template<typename ForwardRange>
+  std::uint_fast8_t operator()(ForwardRange const &r) const
+  {
+    return (*this)(std::cbegin(r), std::cend(r));
+  }
+
 private:
   Standard_::Calculator standard_calculator_;
 }; // class Calculator
