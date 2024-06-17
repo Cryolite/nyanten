@@ -254,9 +254,15 @@ int main()
     std::array<std::uint_fast8_t, 9u> hand = {0u, 0u, 0u, 0u, 0u, 0u, 0u, 0u, 0u};
     buildMap(hand, 0u, 0u, shupai_map);
 
-    std::ofstream ofs("src/standard/shupai_map.bin", std::ios::binary);
+    std::ofstream ofs("shupai_map.bin", std::ios::binary);
+    if (!ofs) {
+      throw std::runtime_error("Failed to create the map file.");
+    }
     ofs.write(
       reinterpret_cast<char const *>(shupai_map.data()), shupai_map.size() * sizeof(std::uint64_t));
+    if (!ofs) {
+      throw std::runtime_error("Failed to write the map file.");
+    }
     ofs.flush();
   }
 
@@ -266,9 +272,15 @@ int main()
     std::array<std::uint_fast8_t, 7u> hand = {0u, 0u, 0u, 0u, 0u, 0u, 0u};
     buildMap(hand, 0u, 0u, zipai_map);
 
-    std::ofstream ofs("src/standard/zipai_map.bin", std::ios::binary);
+    std::ofstream ofs("zipai_map.bin", std::ios::binary);
+    if (!ofs) {
+      throw std::runtime_error("Failed to create the map file.");
+    }
     ofs.write(
       reinterpret_cast<char const *>(zipai_map.data()), zipai_map.size() * sizeof(std::uint64_t));
+    if (!ofs) {
+      throw std::runtime_error("Failed to write the map file.");
+    }
     ofs.flush();
   }
 }

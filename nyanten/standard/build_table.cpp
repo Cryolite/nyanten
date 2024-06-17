@@ -59,7 +59,7 @@ void dumpTable(TableImpl<N> const &table)
   static_assert(N == 9u || N == 7u);
 
   std::filesystem::path const path(
-    N == 9u ? "src/standard/shupai_table.hpp" : "src/standard/zipai_table.hpp");
+    N == 9u ? "nyanten/standard/shupai_table.hpp" : "nyanten/standard/zipai_table.hpp");
   std::ofstream ofs(path);
   if (!ofs) {
     throw std::runtime_error("Failed to create the table file.");

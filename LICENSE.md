@@ -24,6 +24,6 @@ You should have received a copy of the GNU General Public License along with thi
 
 Files under the GPLv3 License:
 
-- src/standard/test_correctness.cpp
-- src/standard/test_speed_baseline.cpp
-- src/test_correctness.cpp
+- nyanten/standard/test_correctness.cpp
+- nyanten/standard/test_speed_baseline.cpp
+- nyanten/test_correctness.cpp
