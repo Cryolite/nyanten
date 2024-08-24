@@ -5,15 +5,15 @@
 #if !defined(NYANTEN_CALCULATOR_HPP_INCLUDE_GUARD)
 #define NYANTEN_CALCULATOR_HPP_INCLUDE_GUARD
 
-#include "thirteen_orphans/replacement_number.hpp"
-#include "seven_pairs/replacement_number.hpp"
-#include "standard/calculator.hpp"
+#include <nyanten/thirteen_orphans/replacement_number.hpp>
+#include <nyanten/seven_pairs/replacement_number.hpp>
+#include <nyanten/standard/calculator.hpp>
 #include <filesystem>
 #include <algorithm>
 #include <cstdint>
 
 
-namespace Nyanten {
+namespace Nyanten{
 
 class Calculator
 {

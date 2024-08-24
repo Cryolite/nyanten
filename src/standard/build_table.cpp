@@ -2,17 +2,18 @@
 // SPDX-License-Identifier: MIT
 // This file is part of https://github.com/Cryolite/nyanten
 
-#include "core.hpp"
+#include <nyanten/standard/core.hpp>
 #include <filesystem>
 #include <fstream>
 #include <iostream>
 #include <array>
 #include <stdexcept>
 #include <cstdint>
+#include <cstdlib>
 #include <cassert>
 
 
-namespace {
+namespace{
 
 template<std::size_t N>
 using TableImpl = std::array<
@@ -54,13 +55,11 @@ std::uint_fast32_t buildTable(
 }
 
 template<std::size_t N>
-void dumpTable(TableImpl<N> const &table)
+void dumpTable(TableImpl<N> const &table, std::filesystem::path const &table_path)
 {
   static_assert(N == 9u || N == 7u);
 
-  std::filesystem::path const path(
-    N == 9u ? "nyanten/standard/shupai_table.hpp" : "nyanten/standard/zipai_table.hpp");
-  std::ofstream ofs(path);
+  std::ofstream ofs(table_path);
   if (!ofs) {
     throw std::runtime_error("Failed to create the table file.");
   }
@@ -77,11 +76,11 @@ void dumpTable(TableImpl<N> const &table)
     ofs << "#define NYANTEN_STANDARD_ZIPAI_TABLE_HPP_INCLUDE_GUARD\n";
   }
   ofs << '\n';
-  ofs << "#include \"core.hpp\"\n";
+  ofs << "#include <nyanten/standard/core.hpp>\n";
   ofs << "#include <cstdint>\n";
   ofs << '\n';
   ofs << '\n';
-  ofs << "namespace Nyanten::Standard_ {\n";
+  ofs << "namespace Nyanten::Standard_{\n";
   ofs << '\n';
   if (N == 9u) {
     ofs << "inline constexpr std::uint_fast32_t shupai_size = ";
@@ -141,9 +140,13 @@ void dumpTable(TableImpl<N> const &table)
 
 int main(int const argc, char const * const * const argv)
 {
-  if (argc >= 2) {
-    throw std::runtime_error("Too many arguments.");
+  if (argc != 3) {
+    std::cerr << "Usage: " << argv[0] << " <PATH TO SHUPAI TABLE> <PATH TO ZIPAI TABLE>\n";
+    return EXIT_FAILURE;
   }
+
+  std::filesystem::path const shupai_table_path(argv[1]);
+  std::filesystem::path const zipai_table_path(argv[2]);
 
   {
     ShupaiTableImpl shupai_table;
@@ -154,7 +157,7 @@ int main(int const argc, char const * const * const argv)
     buildTable(0u, 0u, shupai_table);
     assert((shupai_table[0u][0u] == 405350u));
 
-    dumpTable(shupai_table);
+    dumpTable(shupai_table, shupai_table_path);
   }
 
   {
@@ -166,6 +169,8 @@ int main(int const argc, char const * const * const argv)
     buildTable(0u, 0u, zipai_table);
     assert((zipai_table[0u][0u] == 43130));
 
-    dumpTable(zipai_table);
+    dumpTable(zipai_table, zipai_table_path);
   }
+
+  return EXIT_SUCCESS;
 }

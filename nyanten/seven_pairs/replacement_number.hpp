@@ -9,7 +9,7 @@
 #include <limits>
 #include <cstdint>
 
-namespace Nyanten::SevenPairs_ {
+namespace Nyanten::SevenPairs_{
 
 template<typename ForwardIterator>
 std::uint_fast8_t calculateReplacementNumber(

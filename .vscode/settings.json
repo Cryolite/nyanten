@@ -1,8 +1,5 @@
 {
     "editor.tabSize": 2,
-    "C_Cpp.default.includePath": [
-        "../shanten-number/src"
-    ],
     "C_Cpp.default.cppStandard": "c++23",
     "files.associations": {
         "ostream": "cpp",
@@ -56,5 +53,9 @@
         "stdexcept": "cpp",
         "streambuf": "cpp",
         "typeinfo": "cpp"
-    }
+    },
+    "cmake.configureArgs": [
+        "-DSHANTEN_NUMBER_ROOT=/workspaces/shanten-number"
+    ],
+    "C_Cpp.errorSquiggles": "disabled"
 }

@@ -5,11 +5,11 @@
 #if !defined(NYANTEN_STANDARD_SHUPAI_TABLE_HPP_INCLUDE_GUARD)
 #define NYANTEN_STANDARD_SHUPAI_TABLE_HPP_INCLUDE_GUARD
 
-#include "core.hpp"
+#include <nyanten/standard/core.hpp>
 #include <cstdint>
 
 
-namespace Nyanten::Standard_ {
+namespace Nyanten::Standard_{
 
 inline constexpr std::uint_fast32_t shupai_size = 405350u;
 

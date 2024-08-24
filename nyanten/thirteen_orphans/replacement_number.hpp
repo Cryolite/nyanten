@@ -11,7 +11,7 @@
 #include <cstdint>
 
 
-namespace Nyanten::ThirteenOrphans_ {
+namespace Nyanten::ThirteenOrphans_{
 
 template<typename ForwardIterator>
 std::uint_fast8_t calculateReplacementNumber(

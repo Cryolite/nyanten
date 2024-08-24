@@ -5,13 +5,13 @@
 #if !defined(NYANTEN_STANDARD_HASH_HPP_INCLUDE_GUARD)
 #define NYANTEN_STANDARD_HASH_HPP_INCLUDE_GUARD
 
-#include "zipai_table.hpp"
-#include "shupai_table.hpp"
+#include <nyanten/standard/zipai_table.hpp>
+#include <nyanten/standard/shupai_table.hpp>
 #include <cstdint>
 #include <cassert>
 
 
-namespace Nyanten::Standard_ {
+namespace Nyanten::Standard_{
 
 template<typename ForwardIterator>
 std::uint_fast32_t hashShupai(ForwardIterator first, ForwardIterator last)

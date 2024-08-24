@@ -2,20 +2,23 @@
 // SPDX-License-Identifier: MIT
 // This file is part of https://github.com/Cryolite/nyanten
 
-#include "hash.hpp"
-#include "zipai_table.hpp"
-#include "shupai_table.hpp"
-#include "core.hpp"
+#include <nyanten/standard/hash.hpp>
+#include <nyanten/standard/zipai_table.hpp>
+#include <nyanten/standard/shupai_table.hpp>
+#include <nyanten/standard/core.hpp>
+#include <filesystem>
 #include <fstream>
+#include <iostream>
 #include <ios>
 #include <algorithm>
 #include <array>
 #include <cstdint>
+#include <cstdlib>
 #include <cstddef>
 #include <cassert>
 
 
-namespace {
+namespace{
 
 using Nyanten::Standard_::shupai_size;
 using Nyanten::Standard_::zipai_size;
@@ -246,15 +249,23 @@ void buildMap(
 
 } // namespace <anonymous>
 
-int main()
+int main(int const argc, char const * const * const argv)
 {
+  if (argc != 3) {
+    std::cerr << "Usage: " << argv[0] << " <PATH TO SHUPAI MAP> <PATH TO ZIPAI MAP>" << std::endl;
+    return EXIT_FAILURE;
+  }
+
+  std::filesystem::path const shupai_map_path(argv[1]);
+  std::filesystem::path const zipai_map_path(argv[2]);
+
   {
     Map shupai_map;
     shupai_map.resize(shupai_size);
     std::array<std::uint_fast8_t, 9u> hand = {0u, 0u, 0u, 0u, 0u, 0u, 0u, 0u, 0u};
     buildMap(hand, 0u, 0u, shupai_map);
 
-    std::ofstream ofs("shupai_map.bin", std::ios::binary);
+    std::ofstream ofs(shupai_map_path, std::ios::binary);
     if (!ofs) {
       throw std::runtime_error("Failed to create the map file.");
     }
@@ -272,7 +283,7 @@ int main()
     std::array<std::uint_fast8_t, 7u> hand = {0u, 0u, 0u, 0u, 0u, 0u, 0u};
     buildMap(hand, 0u, 0u, zipai_map);
 
-    std::ofstream ofs("zipai_map.bin", std::ios::binary);
+    std::ofstream ofs(zipai_map_path, std::ios::binary);
     if (!ofs) {
       throw std::runtime_error("Failed to create the map file.");
     }
@@ -283,4 +294,6 @@ int main()
     }
     ofs.flush();
   }
+
+  return EXIT_SUCCESS;
 }
