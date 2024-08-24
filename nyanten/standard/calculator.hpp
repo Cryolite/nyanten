@@ -5,10 +5,10 @@
 #if !defined(NYANTEN_STANDARD_CALCULATOR_HPP_INCLUDE_GUARD)
 #define NYANTEN_STANDARD_CALCULATOR_HPP_INCLUDE_GUARD
 
-#include "hash.hpp"
-#include "zipai_table.hpp"
-#include "shupai_table.hpp"
-#include "core.hpp"
+#include <nyanten/standard/hash.hpp>
+#include <nyanten/standard/zipai_table.hpp>
+#include <nyanten/standard/shupai_table.hpp>
+#include <nyanten/standard/core.hpp>
 #include <filesystem>
 #include <fstream>
 #include <ios>
@@ -21,14 +21,14 @@
 #include <cassert>
 
 
-namespace Nyanten::Standard_ {
+namespace Nyanten::Standard_{
 
 using Nyanten::Standard_::shupai_size;
 using Nyanten::Standard_::zipai_size;
 
 using Unpack = std::array<std::uint_fast8_t, 10u>;
 
-Unpack unpackReplacementNumbers(std::uint64_t pack)
+inline Unpack unpackReplacementNumbers(std::uint64_t pack)
 {
   Unpack unpack{0u, 0u, 0u, 0u, 0u, 0u, 0u, 0u, 0u, 0u};
   for (std::uint_fast8_t h = 0u; h <= 1u; ++h) {

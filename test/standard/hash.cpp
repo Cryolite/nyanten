@@ -2,9 +2,9 @@
 // SPDX-License-Identifier: MIT
 // This file is part of https://github.com/Cryolite/nyanten
 
-#include "hash.hpp"
-#include "zipai_table.hpp"
-#include "shupai_table.hpp"
+#include <nyanten/standard/hash.hpp>
+#include <nyanten/standard/zipai_table.hpp>
+#include <nyanten/standard/shupai_table.hpp>
 #include <vector>
 #include <array>
 #include <stdexcept>
@@ -12,7 +12,7 @@
 #include <cassert>
 
 
-namespace {
+namespace{
 
 using Nyanten::Standard_::shupai_size;
 using Nyanten::Standard_::zipai_size;

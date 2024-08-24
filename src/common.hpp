@@ -2,8 +2,8 @@
 // SPDX-License-Identifier: MIT
 // This file is part of https://github.com/Cryolite/nyanten
 
-#if !defined(NYANTEN_CORE_HPP_INCLUDE_GUARD)
-#define NYANTEN_CORE_HPP_INCLUDE_GUARD
+#if !defined(COMMON_HPP_INCLUDE_GUARD)
+#define COMMON_HPP_INCLUDE_GUARD
 
 #include <random>
 #include <algorithm>
@@ -12,7 +12,7 @@
 #include <cstdint>
 
 
-namespace Nyanten::Impl_ {
+namespace Nyanten::Impl_{
 
 inline std::mt19937 createRNG()
 {
@@ -43,4 +43,4 @@ inline std::vector<int> createRandomPureHand(std::mt19937 &rng)
 
 } // namespace Nyanten::Impl_
 
-#endif // !defined(NYANTEN_CORE_HPP_INCLUDE_GUARD)
+#endif // !defined(COMMON_HPP_INCLUDE_GUARD)

@@ -2,9 +2,10 @@
 // SPDX-License-Identifier: GPL-3.0-or-later
 // This file is part of https://github.com/Cryolite/nyanten
 
-#include "calculator.hpp"
-#include "../core.hpp"
+#include <nyanten/standard/calculator.hpp>
+#include "../../src/common.hpp"
 #include <calsht.hpp>
+#include <filesystem>
 #include <iostream>
 #include <random>
 #include <numeric>
@@ -13,10 +14,11 @@
 #include <array>
 #include <string>
 #include <cstdint>
+#include <cstdlib>
 #include <cstddef>
 
 
-namespace {
+namespace{
 
 using Nyanten::Impl_::createRNG;
 using Nyanten::Impl_::createRandomPureHand;
@@ -25,25 +27,42 @@ using Nyanten::Impl_::createRandomPureHand;
 
 int main(int const argc, char const * const * const argv)
 {
-  if (argc != 2) {
-    std::cerr << "Usage: " << argv[0] << " N" << std::endl;
+  if (argc != 4) {
+    std::cerr << "Usage: " << argv[0] << " <PATH TO shanten-number> <PATH TO map.bin> <# OF TESTS>"
+      << std::endl;
     return EXIT_FAILURE;
   }
 
-  std::istringstream iss(argv[1]);
-  std::size_t num_tests;
+  std::filesystem::path const shanten_number_path(argv[1]);
+  if (!std::filesystem::is_directory(shanten_number_path)) {
+    std::cerr << shanten_number_path.string() << ": Not a directory." << std::endl;
+    return EXIT_FAILURE;
+  }
+
+  std::filesystem::path const map_path(argv[2]);
+  if (!std::filesystem::is_regular_file(map_path) && !std::filesystem::is_symlink(map_path)) {
+    std::cerr << map_path.string() << ": Not a file." << std::endl;
+    return EXIT_FAILURE;
+  }
+
+  std::istringstream iss(argv[3]);
+  long long num_tests;
   iss >> num_tests;
   if (iss.fail()) {
-    std::cerr << "An invalid argument." << std::endl;
+    std::cerr << "Failed to parse the number of tests." << std::endl;
+    return EXIT_FAILURE;
+  }
+  if (num_tests < 0) {
+    std::cerr << "An invalid number of tests." << std::endl;
     return EXIT_FAILURE;
   }
 
   std::mt19937 rng = createRNG();
 
   Calsht calculator0;
-  calculator0.initialize("../shanten-number");
+  calculator0.initialize(shanten_number_path.string());
 
-  Nyanten::Standard_::Calculator calculator1("map.bin");
+  Nyanten::Standard_::Calculator calculator1(map_path.string());
 
   for (std::size_t i = 0u; i < num_tests; ++i) {
     std::vector<int> const hand = createRandomPureHand(rng);
@@ -63,4 +82,6 @@ int main(int const argc, char const * const * const argv)
       return EXIT_FAILURE;
     }
   }
+
+  return EXIT_SUCCESS;
 }

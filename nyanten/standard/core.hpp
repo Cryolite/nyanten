@@ -10,7 +10,7 @@
 #include <cstdint>
 
 
-namespace Nyanten::Standard_ {
+namespace Nyanten::Standard_{
 
 using ShupaiTable = std::array<
   std::array<
