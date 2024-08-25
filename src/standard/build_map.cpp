@@ -9,9 +9,9 @@
 #include <filesystem>
 #include <fstream>
 #include <iostream>
-#include <ios>
 #include <algorithm>
 #include <array>
+#include <stdexcept>
 #include <cstdint>
 #include <cstdlib>
 #include <cstddef>
@@ -22,6 +22,7 @@ namespace{
 
 using Nyanten::Standard_::shupai_size;
 using Nyanten::Standard_::zipai_size;
+using Nyanten::Standard_::MapValue;
 using Nyanten::Standard_::Map;
 
 std::array<std::array<std::uint_fast8_t, 3u>, 8u> s_table = {{
@@ -173,29 +174,25 @@ void getZipaiReplacementNumber(
 }
 
 template<std::size_t N>
-std::uint64_t packReplacementNumbers(std::array<std::uint_fast8_t, N> const &hand)
+MapValue packReplacementNumbers(std::array<std::uint_fast8_t, N> const &hand)
 {
   static_assert(N == 7u || N == 9u);
 
-  std::uint64_t pack = 0u;
-  {
-    std::uint64_t base = 1u;
-    for (std::uint_fast8_t h = 0u; h <= 1u; ++h) {
-      for (std::uint_fast8_t m = 0u; m <= 4u; ++m) {
-        std::uint_fast8_t replacement_number = 9u;
-        if constexpr (N == 9u) {
-          std::array<std::uint_fast8_t, 9u> winning_hand{0u, 0u, 0u, 0u, 0u, 0u, 0u, 0u, 0u};
-          getShupaiReplacementNumber(
-            hand, m, h, 0u, 0u, 0u, 0u, 0u, winning_hand, replacement_number);
-        }
-        else {
-          std::array<std::uint_fast8_t, 7u> winning_hand{0u, 0u, 0u, 0u, 0u, 0u, 0u};
-          getZipaiReplacementNumber(
-            hand, m, h, 0u, 0u, 0u, winning_hand, replacement_number);
-        }
-        pack += replacement_number * base;
-        base *= 10u;
+  MapValue pack{};
+  for (std::uint_fast8_t h = 0u; h <= 1u; ++h) {
+    for (std::uint_fast8_t m = 0u; m <= 4u; ++m) {
+      std::uint_fast8_t replacement_number = 7u;
+      if constexpr (N == 9u) {
+        std::array<std::uint_fast8_t, 9u> winning_hand{0u, 0u, 0u, 0u, 0u, 0u, 0u, 0u, 0u};
+        getShupaiReplacementNumber(
+          hand, m, h, 0u, 0u, 0u, 0u, 0u, winning_hand, replacement_number);
       }
+      else {
+        std::array<std::uint_fast8_t, 7u> winning_hand{0u, 0u, 0u, 0u, 0u, 0u, 0u};
+        getZipaiReplacementNumber(
+          hand, m, h, 0u, 0u, 0u, winning_hand, replacement_number);
+      }
+      pack[m] |= static_cast<std::uint8_t>(replacement_number << (h * 4u));
     }
   }
   return pack;
@@ -215,7 +212,7 @@ void createEntry(std::array<std::uint_fast8_t, N> const &hand, Map &map)
     }
   }();
 
-  std::uint64_t const entry = packReplacementNumbers(hand);
+  MapValue const entry = packReplacementNumbers(hand);
 
   map[h] = entry;
 }
@@ -265,16 +262,38 @@ int main(int const argc, char const * const * const argv)
     std::array<std::uint_fast8_t, 9u> hand = {0u, 0u, 0u, 0u, 0u, 0u, 0u, 0u, 0u};
     buildMap(hand, 0u, 0u, shupai_map);
 
-    std::ofstream ofs(shupai_map_path, std::ios::binary);
+    std::ofstream ofs(shupai_map_path);
     if (!ofs) {
-      throw std::runtime_error("Failed to create the map file.");
+      throw std::runtime_error("Failed to create the shupai map file.");
     }
-    ofs.write(
-      reinterpret_cast<char const *>(shupai_map.data()), shupai_map.size() * sizeof(std::uint64_t));
-    if (!ofs) {
-      throw std::runtime_error("Failed to write the map file.");
+
+    ofs << "// Copyright (c) 2024 Cryolite. All rights reserved.\n";
+    ofs << "// SPDX-License-Identifier: MIT\n";
+    ofs << "// This file is part of https://github.com/Cryolite/nyanten\n";
+    ofs << '\n';
+    ofs << "#if !defined(NYANTEN_STANDARD_SHUPAI_MAP_HPP_INCLUDE_GUARD)\n";
+    ofs << "#define NYANTEN_STANDARD_SHUPAI_MAP_HPP_INCLUDE_GUARD\n";
+    ofs << '\n';
+    ofs << "#include <nyanten/standard/shupai_table.hpp>\n";
+    ofs << "#include <nyanten/standard/core.hpp>\n";
+    ofs << "#include <cstdint>\n";
+    ofs << '\n';
+    ofs << '\n';
+    ofs << "namespace Nyanten::Standard_{\n";
+    ofs << '\n';
+    ofs << "inline constexpr std::array<MapValue, Nyanten::Standard_::shupai_size> shupai_map{{\n";
+    for (MapValue const &entry : shupai_map) {
+      ofs << "  {{";
+      for (std::uint8_t const pack : entry) {
+        ofs << static_cast<unsigned>(pack) << "u,";
+      }
+      ofs << "}},\n";
     }
-    ofs.flush();
+    ofs << "}};\n";
+    ofs << '\n';
+    ofs << "} // namespace Nyanten::Standard_\n";
+    ofs << '\n';
+    ofs << "#endif // !defined(NYANTEN_STANDARD_SHUPAI_MAP_HPP_INCLUDE_GUARD)\n";
   }
 
   {
@@ -283,16 +302,38 @@ int main(int const argc, char const * const * const argv)
     std::array<std::uint_fast8_t, 7u> hand = {0u, 0u, 0u, 0u, 0u, 0u, 0u};
     buildMap(hand, 0u, 0u, zipai_map);
 
-    std::ofstream ofs(zipai_map_path, std::ios::binary);
+    std::ofstream ofs(zipai_map_path);
     if (!ofs) {
-      throw std::runtime_error("Failed to create the map file.");
+      throw std::runtime_error("Failed to create the zipai map file.");
     }
-    ofs.write(
-      reinterpret_cast<char const *>(zipai_map.data()), zipai_map.size() * sizeof(std::uint64_t));
-    if (!ofs) {
-      throw std::runtime_error("Failed to write the map file.");
+
+    ofs << "// Copyright (c) 2024 Cryolite. All rights reserved.\n";
+    ofs << "// SPDX-License-Identifier: MIT\n";
+    ofs << "// This file is part of https://github.com/Cryolite/nyanten\n";
+    ofs << '\n';
+    ofs << "#if !defined(NYANTEN_STANDARD_ZIPAI_MAP_HPP_INCLUDE_GUARD)\n";
+    ofs << "#define NYANTEN_STANDARD_ZIPAI_MAP_HPP_INCLUDE_GUARD\n";
+    ofs << '\n';
+    ofs << "#include <nyanten/standard/zipai_table.hpp>\n";
+    ofs << "#include <nyanten/standard/core.hpp>\n";
+    ofs << "#include <cstdint>\n";
+    ofs << '\n';
+    ofs << '\n';
+    ofs << "namespace Nyanten::Standard_{\n";
+    ofs << '\n';
+    ofs << "inline constexpr std::array<MapValue, Nyanten::Standard_::zipai_size> zipai_map{{\n";
+    for (MapValue const &entry : zipai_map) {
+      ofs << "  {{";
+      for (std::uint8_t const pack : entry) {
+        ofs << static_cast<unsigned>(pack) << "u,";
+      }
+      ofs << "}},\n";
     }
-    ofs.flush();
+    ofs << "}};\n";
+    ofs << '\n';
+    ofs << "} // namespace Nyanten::Standard_\n";
+    ofs << '\n';
+    ofs << "#endif // !defined(NYANTEN_STANDARD_ZIPAI_MAP_HPP_INCLUDE_GUARD)\n";
   }
 
   return EXIT_SUCCESS;

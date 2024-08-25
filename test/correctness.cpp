@@ -2,7 +2,7 @@
 // SPDX-License-Identifier: GPL-3.0-or-later
 // This file is part of https://github.com/Cryolite/nyanten
 
-#include <nyanten/calculator.hpp>
+#include <nyanten/replacement_number.hpp>
 #include "../src/common.hpp"
 #include <calsht.hpp>
 #include <iostream>
@@ -18,17 +18,10 @@
 #include <cstddef>
 
 
-namespace{
-
-using Nyanten::Impl_::createRNG;
-using Nyanten::Impl_::createRandomPureHand;
-
-} // namespace <anonymous>
-
 int main(int const argc, char const * const * const argv)
 {
-  if (argc != 4) {
-    std::cerr << "Usage: " << argv[0] << " <PATH TO shanten-number> <PATH TO map.bin> <# OF TESTS>"
+  if (argc != 3) {
+    std::cerr << "Usage: " << argv[0] << " <PATH TO shanten-number> <# OF TESTS>"
       << std::endl;
     return EXIT_FAILURE;
   }
@@ -39,13 +32,7 @@ int main(int const argc, char const * const * const argv)
     return EXIT_FAILURE;
   }
 
-  std::filesystem::path const map_path(argv[2]);
-  if (!std::filesystem::is_regular_file(map_path) && !std::filesystem::is_symlink(map_path)) {
-    std::cerr << map_path.string() << ": Not a file." << std::endl;
-    return EXIT_FAILURE;
-  }
-
-  std::istringstream iss(argv[3]);
+  std::istringstream iss(argv[2]);
   long long num_tests;
   iss >> num_tests;
   if (iss.fail()) {
@@ -57,21 +44,19 @@ int main(int const argc, char const * const * const argv)
     return EXIT_FAILURE;
   }
 
-  std::mt19937 rng = createRNG();
+  std::mt19937 rng = Nyanten::Impl_::createRNG();
 
   Calsht calculator0;
   calculator0.initialize(shanten_number_path.string());
 
-  Nyanten::Calculator calculator1(map_path.string());
-
   for (std::size_t i = 0u; i < num_tests; ++i) {
-    std::vector<int> const hand = createRandomPureHand(rng);
+    std::vector<int> const hand = Nyanten::Impl_::createRandomPureHand(rng);
     std::uint_fast8_t const n = std::accumulate(hand.cbegin(), hand.cend(), 0u);
     std::uint_fast8_t const m = n / 3u;
 
     std::uint_fast8_t shanten0;
     std::tie(shanten0, std::ignore) = calculator0(hand, m, 7);
-    std::uint_fast8_t const shanten1 = calculator1(hand.cbegin(), hand.cend());
+    std::uint_fast8_t const shanten1 = Nyanten::calculateReplacementNumber(hand);
     if (shanten0 != shanten1) {
       std::cerr << "Hand: ";
       for (int const tile : hand) {

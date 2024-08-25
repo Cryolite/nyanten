@@ -15,9 +15,30 @@ add_dependencies(test.correctness
 if (CMAKE_BUILD_TYPE STREQUAL "Release")
   add_test(
     NAME correctness
-    COMMAND env ASAN_OPTIONS=handle_abort=1 ./correctness "${SHANTEN_NUMBER_ROOT}" "${CMAKE_SOURCE_DIR}/map.bin" 100000000)
+    COMMAND env ASAN_OPTIONS=handle_abort=1 ./correctness "${SHANTEN_NUMBER_ROOT}" 100000000)
 else()
   add_test(
     NAME correctness
-    COMMAND env ASAN_OPTIONS=handle_abort=1 ./correctness "${SHANTEN_NUMBER_ROOT}" "${CMAKE_SOURCE_DIR}/map.bin" 10000)
+    COMMAND env ASAN_OPTIONS=handle_abort=1 ./correctness "${SHANTEN_NUMBER_ROOT}" 10000)
 endif()
+
+add_executable(test.standard.performance_empty
+  performance_empty.cpp)
+set_target_properties(test.standard.performance_empty
+  PROPERTIES
+  OUTPUT_NAME performance_empty)
+
+add_executable(test.standard.performance_baseline
+  performance_baseline.cpp
+  ${SHANTEN_NUMBER_ROOT}/src/calsht.cpp)
+set_target_properties(test.standard.performance_baseline
+  PROPERTIES
+  OUTPUT_NAME performance_baseline)
+
+add_executable(test.standard.performance_proposed
+  performance_proposed.cpp)
+set_target_properties(test.standard.performance_proposed
+  PROPERTIES
+  OUTPUT_NAME performance_proposed)
+add_dependencies(test.standard.performance_proposed
+  src.standard.map)

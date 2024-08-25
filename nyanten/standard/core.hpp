@@ -33,7 +33,8 @@ using ZipaiTable = std::array<
   7u // i = 0, 1, ..., 6
 >;
 
-using Map = std::vector<std::uint64_t>;
+using MapValue = std::array<std::uint8_t, 5u>;
+using Map = std::vector<MapValue>;
 
 } // namespace Nyanten::Standard_
 

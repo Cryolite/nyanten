@@ -5,7 +5,6 @@
 #if !defined(NYANTEN_SEVEN_PAIRS_REPLACEMENT_NUMBER_HPP_INCLUDE_GUARD)
 #define NYANTEN_SEVEN_PAIRS_REPLACEMENT_NUMBER_HPP_INCLUDE_GUARD
 
-#include <stdexcept>
 #include <limits>
 #include <cstdint>
 

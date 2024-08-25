@@ -9,6 +9,8 @@
 #include <array>
 #include <stdexcept>
 #include <cstdint>
+#include <cstdlib>
+#include <cstddef>
 #include <cassert>
 
 
@@ -97,4 +99,6 @@ int main()
       }
     }
   }
+
+  return EXIT_SUCCESS;
 }
