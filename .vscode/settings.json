@@ -55,7 +55,8 @@
         "typeinfo": "cpp"
     },
     "cmake.configureArgs": [
-        "-DSHANTEN_NUMBER_ROOT=/workspaces/shanten-number"
+        "-DSHANTEN_NUMBER_ROOT:FILEPATH=/workspaces/shanten-number"
     ],
-    "C_Cpp.errorSquiggles": "disabled"
+    "C_Cpp.errorSquiggles": "disabled",
+    "C_Cpp.default.compilerPath": "/home/vscode/.local/bin/g++"
 }

@@ -6,7 +6,6 @@
 #define NYANTEN_THIRTEEN_ORPHANS_REPLACEMENT_NUMBER_HPP_INCLUDE_GUARD
 
 #include <iterator>
-#include <stdexcept>
 #include <limits>
 #include <cstdint>
 
