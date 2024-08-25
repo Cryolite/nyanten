@@ -5,48 +5,19 @@ Nyanten is a C++ library for fast calculation of deficiency number (a.k.a. shant
 # Typical Usage
 
 ```cpp
-#include <nyanten/calculator.hpp>
+#include <nyanten/replacement_number.hpp>
 
 int main()
 {
   std::vector<unsigned> hand;
   // Set the count of each tile to `hand`.
-  Nyanten::Calculator calculator("PATH/TO/map.bin");
-  unsigned const deficiency_number = calculator(hand);
+  unsigned const replacement_number = Nyanten::calculateReplacementNumber(hand);
 }
 ```
 
 # Interfaces
 
-### `explicit Nyanten::Calculator::Calculator(std::filesystem::path const &path)`
-
-Construct an instance of the class `Nyanten::Calculator`. The argument `path` must be a path to the `map.bin` file.
-
-### `Nyanten::Calculator::Calculator(Calculator const &) noexcept`
-
-The copy constructor.
-
-### `Nyanten::Calculator::Calculator(Calculator &&) noexcept`
-
-The move constructor.
-
-### `void Nyanten::Calculator::swap(Calculator &rhs) noexcept`
-
-Swap the object states between `*this` and `rhs`.
-
-### `void Nyanten::swap(Nyanten::Calculator &lhs, Nyanten::Calculator &rhs) noexcept`
-
-Call `lhs.swap(rhs)`.
-
-### `Nyanten::Calculator &operator=(Nyanten::Calculator const &) noexcept`
-
-The copy assignment operator.
-
-### `Nyanten::Calculator &operator=(Nyanten::Calculator &&) noexcept`
-
-The move assignment operator.
-
-### `template<typename ForwardIterator>`<br/>`std::uint_fast8_t Nyanten::Calculator::operator()(ForwardIterator first, ForwardIterator last) noexcept`
+### `template<typename ForwardIterator>`<br/>`std::uint_fast8_t Nyanten::calculateReplacementNumber(ForwardIterator first, ForwardIterator last)`
 
 #### Preconditions
 
@@ -75,6 +46,6 @@ Calculate the replacement number, which is equal to the deficiency number (a.k.a
 |-------|-------|-------|-------|-------|-----------|-----------|---------|
 | Tile  | 🀀 (E) | 🀁 (S) | 🀂 (W) | 🀃 (N) | 🀆 (White) | 🀅 (Green) | 🀄 (Red) |
 
-### `template<typename ForwardRange>`<br/>`std::uint_fast8_t Nyanten::Calculator::operator()(ForwardRange const &r) const`
+### `template<typename ForwardRange>`<br/>`std::uint_fast8_t Nyanten::calculateReplacementNumber(ForwardRange const &r)`
 
-Call `(*this)(std::cbegin(r), std::cend(r))`.
+Call `Nyanten::calculateReplacementNumber(std::cbegin(r), std::cend(r))`.
