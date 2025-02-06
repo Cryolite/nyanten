@@ -47,7 +47,10 @@ export CXX="$HOME/.local/bin/g++"
 # Clone `shanten-number`.
 pushd /workspaces
 git clone https://github.com/tomohxx/shanten-number
-pushd shanten-number
-tar -xzf data.tar.gz
+cmake -S shanten-number -B shanten-number/build -DCMAKE_BUILD_TYPE=Release
+cmake --build shanten-number/build
+pushd shanten-number/build
+./mkind
+cp index_h.bin index_s.bin ..
 popd
 popd
