@@ -2,6 +2,14 @@
 
 Nyanten is a C++ library for fast calculation of deficiency number (a.k.a. shanten number, 向聴数).
 
+# Installation
+
+```bash
+cmake -S /PATH/TO/nyanten -B /PATH/TO/nyanten/build && cmake --install /PATH/TO/nyanten/build --prefix /PATH/TO/INSTALL_PREFIX
+```
+
+After the installation, please add `/PATH/TO/INSTALL_PREFIX/include` to your include path. Since Nyanten is a header-only library, you can also use it by adding the root directory of the Nyanten repository to your include path, even if you do not perform the installation steps described above.
+
 # Typical Usage
 
 ```cpp
