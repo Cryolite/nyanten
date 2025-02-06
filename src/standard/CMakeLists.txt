@@ -14,6 +14,7 @@ add_custom_command(
   COMMAND cp zipai_table.hpp "${CMAKE_SOURCE_DIR}/nyanten/standard/zipai_table.hpp"
   DEPENDS src.standard.build_table)
 add_custom_target(src.standard.table
+  ALL
   DEPENDS shupai_table.hpp zipai_table.hpp)
 
 add_executable(src.standard.build_map
@@ -30,4 +31,5 @@ add_custom_command(
   COMMAND cp zipai_map.hpp "${CMAKE_SOURCE_DIR}/nyanten/standard/zipai_map.hpp"
   DEPENDS src.standard.build_map)
 add_custom_target(src.standard.map
+  ALL
   DEPENDS shupai_map.hpp zipai_map.hpp)
