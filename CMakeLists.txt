@@ -85,14 +85,33 @@ set(CMAKE_EXE_LINKER_FLAGS "${CMAKE_EXE_LINKER_FLAGS} -pthread")
 message("CMAKE_SHARED_LINKER_FLAGS=${CMAKE_SHARED_LINKER_FLAGS}")
 message("CMAKE_EXE_LINKER_FLAGS=${CMAKE_EXE_LINKER_FLAGS}")
 
-if ((NOT DEFINED SHANTEN_NUMBER_ROOT) OR (SHANTEN_NUMBER_ROOT STREQUAL ""))
-  message(FATAL_ERROR "`SHANTEN_NUMBER_ROOT` is not set.")
-endif()
-message("SHANTEN_NUMBER_ROOT=${SHANTEN_NUMBER_ROOT}")
-
-include_directories(
-  "${SHANTEN_NUMBER_ROOT}/src"
-  .)
-
+include_directories(.)
 add_subdirectory(src)
-add_subdirectory(test)
+
+if ((DEFINED SHANTEN_NUMBER_ROOT) AND (NOT (SHANTEN_NUMBER_ROOT STREQUAL "")))
+  message("SHANTEN_NUMBER_ROOT=${SHANTEN_NUMBER_ROOT}")
+  include_directories("${SHANTEN_NUMBER_ROOT}/src")
+  add_subdirectory(test)
+else()
+  message("SHANTEN_NUMBER_ROOT=(NOT DEFINED)")
+  message("(Testing targets are not created because `SHANTEN_NUMBER_ROOT` is not defined.)")
+endif()
+
+add_library(nyanten INTERFACE)
+target_sources(nyanten
+  INTERFACE
+  FILE_SET nyanten_headers
+  TYPE HEADERS
+  FILES
+    nyanten/standard/core.hpp
+    nyanten/standard/shupai_table.hpp
+    nyanten/standard/zipai_table.hpp
+    nyanten/standard/shupai_map.hpp
+    nyanten/standard/zipai_map.hpp
+    nyanten/standard/hash.hpp
+    nyanten/standard/replacement_number.hpp
+    nyanten/seven_pairs/replacement_number.hpp
+    nyanten/thirteen_orphans/replacement_number.hpp
+    nyanten/replacement_number.hpp)
+
+install(TARGETS nyanten FILE_SET nyanten_headers)
