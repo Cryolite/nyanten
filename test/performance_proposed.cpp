@@ -6,6 +6,7 @@
 #include "../src/common.hpp"
 #include <sstream>
 #include <iostream>
+#include <chrono>
 #include <random>
 #include <vector>
 #include <cstdint>
@@ -34,12 +35,17 @@ int main(int const argc, char const * const * const argv)
 
   std::mt19937 rng = Nyanten::Impl_::createRNG();
 
+  std::chrono::nanoseconds total_elapsed = std::chrono::nanoseconds::zero();
   for (std::size_t i = 0u; i < num_tests; ++i) {
     std::vector<int> const hand = Nyanten::Impl_::createRandomPureHand(rng);
     std::uint_fast8_t const n = std::accumulate(hand.cbegin(), hand.cend(), 0u);
+    std::chrono::high_resolution_clock::time_point const start = std::chrono::high_resolution_clock::now();
     std::uint_fast8_t const volatile replacement_number
       = Nyanten::calculateReplacementNumber(hand.cbegin(), hand.cend());
+    std::chrono::high_resolution_clock::time_point const end = std::chrono::high_resolution_clock::now();
+    total_elapsed += std::chrono::duration_cast<std::chrono::nanoseconds>(end - start);
   }
+  std::cout << "Average time: " << total_elapsed.count() / num_tests << " ns" << std::endl;
 
   return EXIT_SUCCESS;
 }

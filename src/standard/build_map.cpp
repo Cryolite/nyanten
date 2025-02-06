@@ -25,112 +25,125 @@ using Nyanten::Standard_::zipai_size;
 using Nyanten::Standard_::MapValue;
 using Nyanten::Standard_::Map;
 
-std::array<std::array<std::uint_fast8_t, 3u>, 8u> s_table = {{
+constexpr std::array<std::array<std::uint_fast8_t, 3u>, 8u> d_table = {{
   {{0u, 0u, 0u}},
   {{0u, 0u, 1u}},
-  {{0u, 0u, 2u}},
   {{0u, 1u, 0u}},
-  {{0u, 1u, 1u}},
   {{1u, 0u, 0u}},
   {{1u, 0u, 1u}},
-  {{1u, 0u, 2u}},
+  {{1u, 1u, 0u}},
+  {{2u, 0u, 0u}},
+  {{2u, 0u, 1u}},
 }};
-std::array<std::uint_fast8_t, 8u> m_table{0u, 1u, 2u, 1u, 2u, 0u, 1u, 2u};
-std::array<std::uint_fast8_t, 8u> n_table{0u, 1u, 2u, 3u, 4u, 2u, 3u, 4u};
+constexpr std::array<std::uint_fast8_t, 8u> m_table{
+  d_table[0u][0u] + d_table[0u][1u],
+  d_table[1u][0u] + d_table[1u][1u],
+  d_table[2u][0u] + d_table[2u][1u],
+  d_table[3u][0u] + d_table[3u][1u],
+  d_table[4u][0u] + d_table[4u][1u],
+  d_table[5u][0u] + d_table[5u][1u],
+  d_table[6u][0u] + d_table[6u][1u],
+  d_table[7u][0u] + d_table[7u][1u],
+};
+constexpr std::array<std::uint_fast8_t, 8u> n_table{
+  d_table[0u][0u] + 3u * d_table[0u][1u] + 2u * d_table[0u][2u],
+  d_table[1u][0u] + 3u * d_table[1u][1u] + 2u * d_table[1u][2u],
+  d_table[2u][0u] + 3u * d_table[2u][1u] + 2u * d_table[2u][2u],
+  d_table[3u][0u] + 3u * d_table[3u][1u] + 2u * d_table[3u][2u],
+  d_table[4u][0u] + 3u * d_table[4u][1u] + 2u * d_table[4u][2u],
+  d_table[5u][0u] + 3u * d_table[5u][1u] + 2u * d_table[5u][2u],
+  d_table[6u][0u] + 3u * d_table[6u][1u] + 2u * d_table[6u][2u],
+  d_table[7u][0u] + 3u * d_table[7u][1u] + 2u * d_table[7u][2u],
+};
 
 template<std::size_t N>
 std::uint_fast8_t getHandDistance(
-  std::array<std::uint_fast8_t, N> const &hand,
-  std::array<std::uint_fast8_t, N> const &winning_hand)
+  std::array<std::uint_fast8_t, N> const &target_hand,
+  std::array<std::uint_fast8_t, N> const &hand)
 {
   std::uint_fast8_t distance = 0u;
   for (std::uint_fast8_t i = 0u; i < N; ++i) {
-    if (winning_hand[i] > hand[i]) {
-      distance += winning_hand[i] - hand[i];
+    if (target_hand[i] > hand[i]) {
+      distance += target_hand[i] - hand[i];
     }
   }
   return distance;
 }
 
-void getShupaiReplacementNumber(
+std::uint_fast8_t getShupaiReplacementNumber(
   std::array<std::uint_fast8_t, 9u> const &hand,
   std::uint_fast8_t const m,
   std::uint_fast8_t const h,
   std::uint_fast8_t const i,
   std::uint_fast8_t const mm,
   std::uint_fast8_t const hh,
-  std::uint_fast8_t const x,
-  std::uint_fast8_t const y,
-  std::array<std::uint_fast8_t, 9u> &winning_hand,
-  std::uint_fast8_t &replacement_number)
+  std::array<std::uint_fast8_t, 9u> &target_hand,
+  std::uint_fast8_t upper_bound)
 {
   assert((m <= 4u));
   assert((h <= 1u));
   assert((i <= 9u));
   assert((mm <= m));
   assert((hh <= h));
-  assert((x <= 4u));
-  assert((y <= 2u));
 
   if (i == 9u) {
     if (mm == m && hh == h) {
-      std::uint_fast8_t const distance = getHandDistance(hand, winning_hand);
-      replacement_number = std::min<std::uint_fast8_t>(replacement_number, distance);
+      upper_bound = std::min<std::uint_fast8_t>(upper_bound, getHandDistance(target_hand, hand));
     }
-    return;
+    return upper_bound;
   }
 
-  for (std::uint_fast8_t s = 0u; s < s_table.size(); ++s) {
-    if (mm + m_table[s] > m) {
+  for (std::uint_fast8_t j = 0u; j < d_table.size(); ++j) {
+    if (mm + m_table[j] > m) {
       continue;
     }
-    if (hh + s_table[s][0u] > h) {
+    if (hh + d_table[j][2u] > h) {
       continue;
     }
-    if (i + 2u >= 9u && s_table[s][2u] > 0u) {
+    if (i + 2u >= 9u && d_table[j][0u] >= 1u) {
       continue;
     }
-    if (x + n_table[s] > 4u) {
+    if (target_hand[i] + n_table[j] > 4u) {
       continue;
     }
 
+    target_hand[i] += n_table[j];
     if (i + 2u < 9u) {
-      winning_hand[i] += s_table[s][2u];
-      winning_hand[i + 1u] += s_table[s][2u];
-      winning_hand[i + 2u] += s_table[s][2u];
+      target_hand[i + 1u] += d_table[j][0u];
+      target_hand[i + 2u] += d_table[j][0u];
     }
-    winning_hand[i] += s_table[s][1u] * 3u;
-    winning_hand[i] += s_table[s][0u] * 2u;
-    getShupaiReplacementNumber(
-      hand,
-      m,
-      h,
-      i + 1u,
-      mm + m_table[s],
-      hh + s_table[s][0u],
-      y + s_table[s][2u],
-      s_table[s][2u],
-      winning_hand,
-      replacement_number);
-    winning_hand[i] -= s_table[s][0u] * 2u;
-    winning_hand[i] -= s_table[s][1u] * 3u;
+    std::uint_fast8_t const lower_bound = getHandDistance(target_hand, hand);
+    if (lower_bound < upper_bound) {
+      std::uint_fast8_t const tmp = getShupaiReplacementNumber(
+        hand,
+        m,
+        h,
+        i + 1u,
+        mm + m_table[j],
+        hh + d_table[j][2u],
+        target_hand,
+        upper_bound);
+      upper_bound = std::min<std::uint_fast8_t>(upper_bound, tmp);
+    }
     if (i + 2u < 9u) {
-      winning_hand[i + 2u] -= s_table[s][2u];
-      winning_hand[i + 1u] -= s_table[s][2u];
-      winning_hand[i] -= s_table[s][2u];
+      target_hand[i + 2u] -= d_table[j][0u];
+      target_hand[i + 1u] -= d_table[j][0u];
     }
+    target_hand[i] -= n_table[j];
   }
+
+  return upper_bound;
 }
 
-void getZipaiReplacementNumber(
+std::uint_fast8_t getZipaiReplacementNumber(
   std::array<std::uint_fast8_t, 7u> const &hand,
   std::uint_fast8_t const m,
   std::uint_fast8_t const h,
   std::uint_fast8_t const i,
   std::uint_fast8_t const mm,
   std::uint_fast8_t const hh,
-  std::array<std::uint_fast8_t, 7u> &winning_hand,
-  std::uint_fast8_t &replacement_number)
+  std::array<std::uint_fast8_t, 7u> &target_hand,
+  std::uint_fast8_t upper_bound)
 {
   assert((m <= 4u));
   assert((h <= 1u));
@@ -140,37 +153,40 @@ void getZipaiReplacementNumber(
 
   if (i == 7u) {
     if (mm == m && hh == h) {
-      std::uint_fast8_t const distance = getHandDistance(hand, winning_hand);
-      replacement_number = std::min<std::uint_fast8_t>(replacement_number, distance);
+      upper_bound = std::min<std::uint_fast8_t>(upper_bound, getHandDistance(target_hand, hand));
     }
-    return;
+    return upper_bound;
   }
 
-  for (std::uint_fast8_t s = 0u; s < s_table.size(); ++s) {
-    if (mm + m_table[s] > m) {
+  for (std::uint_fast8_t j = 0u; j < d_table.size(); ++j) {
+    if (mm + m_table[j] > m) {
       continue;
     }
-    if (hh + s_table[s][0u] > h) {
+    if (hh + d_table[j][2u] > h) {
       continue;
     }
-    if (s_table[s][2u] > 0u) {
+    if (d_table[j][0u] > 0u) {
       continue;
     }
 
-    winning_hand[i] += s_table[s][1u] * 3u;
-    winning_hand[i] += s_table[s][0u] * 2u;
-    getZipaiReplacementNumber(
-      hand,
-      m,
-      h,
-      i + 1u,
-      mm + m_table[s],
-      hh + s_table[s][0u],
-      winning_hand,
-      replacement_number);
-    winning_hand[i] -= s_table[s][0u] * 2u;
-    winning_hand[i] -= s_table[s][1u] * 3u;
+    target_hand[i] += n_table[j];
+    std::uint_fast8_t const lower_bound = getHandDistance(target_hand, hand);
+    if (lower_bound < upper_bound) {
+      std::uint_fast8_t const tmp = getZipaiReplacementNumber(
+        hand,
+        m,
+        h,
+        i + 1u,
+        mm + m_table[j],
+        hh + d_table[j][2u],
+        target_hand,
+        upper_bound);
+      upper_bound = std::min<std::uint_fast8_t>(upper_bound, tmp);
+    }
+    target_hand[i] -= n_table[j];
   }
+
+  return upper_bound;
 }
 
 template<std::size_t N>
@@ -181,18 +197,20 @@ MapValue packReplacementNumbers(std::array<std::uint_fast8_t, N> const &hand)
   MapValue pack{};
   for (std::uint_fast8_t h = 0u; h <= 1u; ++h) {
     for (std::uint_fast8_t m = 0u; m <= 4u; ++m) {
-      std::uint_fast8_t replacement_number = 7u;
+      if (m == 0u && h == 0u) {
+        continue;
+      }
+      std::uint_fast8_t replacement_number;
       if constexpr (N == 9u) {
-        std::array<std::uint_fast8_t, 9u> winning_hand{0u, 0u, 0u, 0u, 0u, 0u, 0u, 0u, 0u};
-        getShupaiReplacementNumber(
-          hand, m, h, 0u, 0u, 0u, 0u, 0u, winning_hand, replacement_number);
+        std::array<std::uint_fast8_t, 9u> target_hand{0u, 0u, 0u, 0u, 0u, 0u, 0u, 0u, 0u};
+        replacement_number = getShupaiReplacementNumber(hand, m, h, 0u, 0u, 0u, target_hand, 7u);
       }
       else {
-        std::array<std::uint_fast8_t, 7u> winning_hand{0u, 0u, 0u, 0u, 0u, 0u, 0u};
-        getZipaiReplacementNumber(
-          hand, m, h, 0u, 0u, 0u, winning_hand, replacement_number);
+        std::array<std::uint_fast8_t, 7u> target_hand{0u, 0u, 0u, 0u, 0u, 0u, 0u};
+        replacement_number = getZipaiReplacementNumber(hand, m, h, 0u, 0u, 0u, target_hand, 7u);
       }
-      pack[m] |= static_cast<std::uint8_t>(replacement_number << (h * 4u));
+      std::uint_fast8_t const shift = 3u * (5u * h + m) - 3u;
+      pack |= static_cast<MapValue>(replacement_number << shift);
     }
   }
   return pack;
@@ -281,15 +299,11 @@ int main(int const argc, char const * const * const argv)
     ofs << '\n';
     ofs << "namespace Nyanten::Standard_{\n";
     ofs << '\n';
-    ofs << "inline constexpr std::array<MapValue, Nyanten::Standard_::shupai_size> shupai_map{{\n";
-    for (MapValue const &entry : shupai_map) {
-      ofs << "  {{";
-      for (std::uint8_t const pack : entry) {
-        ofs << static_cast<unsigned>(pack) << "u,";
-      }
-      ofs << "}},\n";
+    ofs << "inline constexpr std::array<MapValue, Nyanten::Standard_::shupai_size> shupai_map{\n";
+    for (MapValue const &pack : shupai_map) {
+      ofs << pack << "u,";
     }
-    ofs << "}};\n";
+    ofs << "};\n";
     ofs << '\n';
     ofs << "} // namespace Nyanten::Standard_\n";
     ofs << '\n';
@@ -321,15 +335,11 @@ int main(int const argc, char const * const * const argv)
     ofs << '\n';
     ofs << "namespace Nyanten::Standard_{\n";
     ofs << '\n';
-    ofs << "inline constexpr std::array<MapValue, Nyanten::Standard_::zipai_size> zipai_map{{\n";
-    for (MapValue const &entry : zipai_map) {
-      ofs << "  {{";
-      for (std::uint8_t const pack : entry) {
-        ofs << static_cast<unsigned>(pack) << "u,";
-      }
-      ofs << "}},\n";
+    ofs << "inline constexpr std::array<MapValue, Nyanten::Standard_::zipai_size> zipai_map{\n";
+    for (MapValue const &pack : zipai_map) {
+      ofs << pack << "u,";
     }
-    ofs << "}};\n";
+    ofs << "};\n";
     ofs << '\n';
     ofs << "} // namespace Nyanten::Standard_\n";
     ofs << '\n';

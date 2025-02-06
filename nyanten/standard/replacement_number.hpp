@@ -24,16 +24,16 @@ using Unpack = std::array<std::uint_fast8_t, 10u>;
 inline Unpack unpack(MapValue const &pack)
 {
   return {
-    static_cast<uint_fast8_t>(pack[0u] & 0x0Fu),
-    static_cast<uint_fast8_t>(pack[1u] & 0x0Fu),
-    static_cast<uint_fast8_t>(pack[2u] & 0x0Fu),
-    static_cast<uint_fast8_t>(pack[3u] & 0x0Fu),
-    static_cast<uint_fast8_t>(pack[4u] & 0x0Fu),
-    static_cast<uint_fast8_t>((pack[0u] >> 4u) & 0x0Fu),
-    static_cast<uint_fast8_t>((pack[1u] >> 4u) & 0x0Fu),
-    static_cast<uint_fast8_t>((pack[2u] >> 4u) & 0x0Fu),
-    static_cast<uint_fast8_t>((pack[3u] >> 4u) & 0x0Fu),
-    static_cast<uint_fast8_t>((pack[4u] >> 4u) & 0x0Fu),
+    0u,
+    static_cast<uint_fast8_t>((pack >> (3u * 0u)) & 0x07u),
+    static_cast<uint_fast8_t>((pack >> (3u * 1u)) & 0x07u),
+    static_cast<uint_fast8_t>((pack >> (3u * 2u)) & 0x07u),
+    static_cast<uint_fast8_t>((pack >> (3u * 3u)) & 0x07u),
+    static_cast<uint_fast8_t>((pack >> (3u * 4u)) & 0x07u),
+    static_cast<uint_fast8_t>((pack >> (3u * 5u)) & 0x07u),
+    static_cast<uint_fast8_t>((pack >> (3u * 6u)) & 0x07u),
+    static_cast<uint_fast8_t>((pack >> (3u * 7u)) & 0x07u),
+    static_cast<uint_fast8_t>((pack >> (3u * 8u)) & 0x07u),
   };
 }
 
