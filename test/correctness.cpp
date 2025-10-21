@@ -1,6 +1,6 @@
 // Copyright (c) 2024 Cryolite. All rights reserved.
 // SPDX-License-Identifier: GPL-3.0-or-later
-// This file is part of https://github.com/Cryolite/nyanten
+// This file is part of https://github.com/Cryolite/nyanten.
 
 #include <nyanten/replacement_number.hpp>
 #include "../src/common.hpp"
@@ -54,8 +54,11 @@ int main(int const argc, char const * const * const argv)
     std::uint_fast8_t const n = std::accumulate(hand.cbegin(), hand.cend(), 0u);
     std::uint_fast8_t const m = n / 3u;
 
+    std::array<int, 34u> hand_;
+    std::copy(hand.cbegin(), hand.cend(), hand_.begin());
+
     std::uint_fast8_t shanten0;
-    std::tie(shanten0, std::ignore) = calculator0(hand, m, 7);
+    std::tie(shanten0, std::ignore) = calculator0(hand_, m, 7);
     std::uint_fast8_t const shanten1 = Nyanten::calculateReplacementNumber(hand);
     if (shanten0 != shanten1) {
       std::cerr << "Hand: ";

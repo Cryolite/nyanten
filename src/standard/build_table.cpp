@@ -1,6 +1,6 @@
 // Copyright (c) 2024 Cryolite. All rights reserved.
 // SPDX-License-Identifier: MIT
-// This file is part of https://github.com/Cryolite/nyanten
+// This file is part of https://github.com/Cryolite/nyanten.
 
 #include <nyanten/standard/core.hpp>
 #include <filesystem>
@@ -65,7 +65,7 @@ void dumpTable(TableImpl<N> const &table, std::filesystem::path const &table_pat
   }
   ofs << "// Copyright (c) 2024 Cryolite. All rights reserved.\n";
   ofs << "// SPDX-License-Identifier: MIT\n";
-  ofs << "// This file is part of https://github.com/Cryolite/nyanten\n";
+  ofs << "// This file is part of https://github.com/Cryolite/nyanten.\n";
   ofs << '\n';
   if (N == 9u) {
     ofs << "#if !defined(NYANTEN_STANDARD_SHUPAI_TABLE_HPP_INCLUDE_GUARD)\n";

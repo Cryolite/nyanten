@@ -1,6 +1,6 @@
 // Copyright (c) 2024 Cryolite. All rights reserved.
 // SPDX-License-Identifier: MIT
-// This file is part of https://github.com/Cryolite/nyanten
+// This file is part of https://github.com/Cryolite/nyanten.
 
 #if !defined(NYANTEN_STANDARD_ZIPAI_TABLE_HPP_INCLUDE_GUARD)
 #define NYANTEN_STANDARD_ZIPAI_TABLE_HPP_INCLUDE_GUARD

@@ -1,6 +1,6 @@
 // Copyright (c) 2024 Cryolite. All rights reserved.
 // SPDX-License-Identifier: GPL-3.0-or-later
-// This file is part of https://github.com/Cryolite/nyanten
+// This file is part of https://github.com/Cryolite/nyanten.
 
 #include "../src/common.hpp"
 #include <calsht.hpp>
@@ -59,9 +59,13 @@ int main(int const argc, char const * const * const argv)
     std::vector<int> const hand = createRandomPureHand(rng);
     std::uint_fast8_t const n = std::accumulate(hand.cbegin(), hand.cend(), 0u);
     std::uint_fast8_t const m = n / 3u;
+
+    std::array<int, 34u> hand_;
+    std::copy(hand.cbegin(), hand.cend(), hand_.begin());
+
     std::uint_fast8_t volatile replacement_number;
     std::chrono::high_resolution_clock::time_point const start = std::chrono::high_resolution_clock::now();
-    std::tie(replacement_number, std::ignore) = calculator(hand, m, 7);
+    std::tie(replacement_number, std::ignore) = calculator(hand_, m, 7);
     std::chrono::high_resolution_clock::time_point const end = std::chrono::high_resolution_clock::now();
     total_elapsed += std::chrono::duration_cast<std::chrono::nanoseconds>(end - start);
   }

@@ -1,6 +1,6 @@
 // Copyright (c) 2024 Cryolite. All rights reserved.
 // SPDX-License-Identifier: MIT
-// This file is part of https://github.com/Cryolite/nyanten
+// This file is part of https://github.com/Cryolite/nyanten.
 
 #include <nyanten/replacement_number.hpp>
 #include "../src/common.hpp"
@@ -38,10 +38,8 @@ int main(int const argc, char const * const * const argv)
   std::chrono::nanoseconds total_elapsed = std::chrono::nanoseconds::zero();
   for (std::size_t i = 0u; i < num_tests; ++i) {
     std::vector<int> const hand = Nyanten::Impl_::createRandomPureHand(rng);
-    std::uint_fast8_t const n = std::accumulate(hand.cbegin(), hand.cend(), 0u);
     std::chrono::high_resolution_clock::time_point const start = std::chrono::high_resolution_clock::now();
-    std::uint_fast8_t const volatile replacement_number
-      = Nyanten::calculateReplacementNumber(hand.cbegin(), hand.cend());
+    std::uint_fast8_t const volatile replacement_number = Nyanten::calculateReplacementNumber(hand.cbegin(), hand.cend());
     std::chrono::high_resolution_clock::time_point const end = std::chrono::high_resolution_clock::now();
     total_elapsed += std::chrono::duration_cast<std::chrono::nanoseconds>(end - start);
   }

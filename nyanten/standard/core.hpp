@@ -1,11 +1,10 @@
 // Copyright (c) 2024 Cryolite. All rights reserved.
 // SPDX-License-Identifier: MIT
-// This file is part of https://github.com/Cryolite/nyanten
+// This file is part of https://github.com/Cryolite/nyanten.
 
 #if !defined(NYANTEN_STANDARD_CORE_HPP_INCLUDE_GUARD)
 #define NYANTEN_STANDARD_CORE_HPP_INCLUDE_GUARD
 
-#include <vector>
 #include <array>
 #include <cstdint>
 
@@ -33,8 +32,11 @@ using ZipaiTable = std::array<
   7u // i = 0, 1, ..., 6
 >;
 
-using MapValue = std::uint32_t;
-using Map = std::vector<MapValue>;
+using MapValue = std::uint16_t;
+
+using Key0 = std::uint_fast8_t;
+using Key1 = std::uint_fast8_t;
+using Key2 = std::uint_fast8_t;
 
 } // namespace Nyanten::Standard_
 

@@ -1,7 +1,8 @@
 // Copyright (c) 2024 Cryolite. All rights reserved.
 // SPDX-License-Identifier: MIT
-// This file is part of https://github.com/Cryolite/nyanten
+// This file is part of https://github.com/Cryolite/nyanten.
 
+#include "common.hpp"
 #include <nyanten/standard/hash.hpp>
 #include <nyanten/standard/zipai_table.hpp>
 #include <nyanten/standard/shupai_table.hpp>
@@ -10,6 +11,7 @@
 #include <fstream>
 #include <iostream>
 #include <algorithm>
+#include <vector>
 #include <array>
 #include <stdexcept>
 #include <cstdint>
@@ -23,7 +25,9 @@ namespace{
 using Nyanten::Standard_::shupai_size;
 using Nyanten::Standard_::zipai_size;
 using Nyanten::Standard_::MapValue;
-using Nyanten::Standard_::Map;
+using Map = std::vector<MapValue>;
+using Nyanten::Standard_::Unpack;
+using Nyanten::Standard_::pack;
 
 constexpr std::array<std::array<std::uint_fast8_t, 3u>, 8u> d_table = {{
   {{0u, 0u, 0u}},
@@ -194,26 +198,24 @@ MapValue packReplacementNumbers(std::array<std::uint_fast8_t, N> const &hand)
 {
   static_assert(N == 7u || N == 9u);
 
-  MapValue pack{};
+  Unpack unpack;
   for (std::uint_fast8_t h = 0u; h <= 1u; ++h) {
     for (std::uint_fast8_t m = 0u; m <= 4u; ++m) {
       if (m == 0u && h == 0u) {
         continue;
       }
-      std::uint_fast8_t replacement_number;
       if constexpr (N == 9u) {
         std::array<std::uint_fast8_t, 9u> target_hand{0u, 0u, 0u, 0u, 0u, 0u, 0u, 0u, 0u};
-        replacement_number = getShupaiReplacementNumber(hand, m, h, 0u, 0u, 0u, target_hand, 7u);
+        unpack[5u * h + m - 1u] = getShupaiReplacementNumber(hand, m, h, 0u, 0u, 0u, target_hand, UINT_FAST8_MAX);
       }
       else {
         std::array<std::uint_fast8_t, 7u> target_hand{0u, 0u, 0u, 0u, 0u, 0u, 0u};
-        replacement_number = getZipaiReplacementNumber(hand, m, h, 0u, 0u, 0u, target_hand, 7u);
+        unpack[5u * h + m - 1u] = getZipaiReplacementNumber(hand, m, h, 0u, 0u, 0u, target_hand, UINT_FAST8_MAX);
       }
-      std::uint_fast8_t const shift = 3u * (5u * h + m) - 3u;
-      pack |= static_cast<MapValue>(replacement_number << shift);
     }
   }
-  return pack;
+
+  return pack(unpack);
 }
 
 template<std::size_t N>
@@ -287,19 +289,18 @@ int main(int const argc, char const * const * const argv)
 
     ofs << "// Copyright (c) 2024 Cryolite. All rights reserved.\n";
     ofs << "// SPDX-License-Identifier: MIT\n";
-    ofs << "// This file is part of https://github.com/Cryolite/nyanten\n";
+    ofs << "// This file is part of https://github.com/Cryolite/nyanten.\n";
     ofs << '\n';
-    ofs << "#if !defined(NYANTEN_STANDARD_SHUPAI_MAP_HPP_INCLUDE_GUARD)\n";
-    ofs << "#define NYANTEN_STANDARD_SHUPAI_MAP_HPP_INCLUDE_GUARD\n";
+    ofs << "#if !defined(NYANTEN_SRC_STANDARD_SHUPAI_MAP_HPP_INCLUDE_GUARD)\n";
+    ofs << "#define NYANTEN_SRC_STANDARD_SHUPAI_MAP_HPP_INCLUDE_GUARD\n";
     ofs << '\n';
     ofs << "#include <nyanten/standard/shupai_table.hpp>\n";
     ofs << "#include <nyanten/standard/core.hpp>\n";
-    ofs << "#include <cstdint>\n";
     ofs << '\n';
     ofs << '\n';
     ofs << "namespace Nyanten::Standard_{\n";
     ofs << '\n';
-    ofs << "inline constexpr std::array<MapValue, Nyanten::Standard_::shupai_size> shupai_map{\n";
+    ofs << "inline constexpr std::array<MapValue, Nyanten::Standard_::shupai_size> shupai_map{";
     for (MapValue const &pack : shupai_map) {
       ofs << pack << "u,";
     }
@@ -307,7 +308,7 @@ int main(int const argc, char const * const * const argv)
     ofs << '\n';
     ofs << "} // namespace Nyanten::Standard_\n";
     ofs << '\n';
-    ofs << "#endif // !defined(NYANTEN_STANDARD_SHUPAI_MAP_HPP_INCLUDE_GUARD)\n";
+    ofs << "#endif // !defined(NYANTEN_SRC_STANDARD_SHUPAI_MAP_HPP_INCLUDE_GUARD)\n";
   }
 
   {
@@ -323,19 +324,18 @@ int main(int const argc, char const * const * const argv)
 
     ofs << "// Copyright (c) 2024 Cryolite. All rights reserved.\n";
     ofs << "// SPDX-License-Identifier: MIT\n";
-    ofs << "// This file is part of https://github.com/Cryolite/nyanten\n";
+    ofs << "// This file is part of https://github.com/Cryolite/nyanten.\n";
     ofs << '\n';
-    ofs << "#if !defined(NYANTEN_STANDARD_ZIPAI_MAP_HPP_INCLUDE_GUARD)\n";
-    ofs << "#define NYANTEN_STANDARD_ZIPAI_MAP_HPP_INCLUDE_GUARD\n";
+    ofs << "#if !defined(NYANTEN_SRC_STANDARD_ZIPAI_MAP_HPP_INCLUDE_GUARD)\n";
+    ofs << "#define NYANTEN_SRC_STANDARD_ZIPAI_MAP_HPP_INCLUDE_GUARD\n";
     ofs << '\n';
     ofs << "#include <nyanten/standard/zipai_table.hpp>\n";
     ofs << "#include <nyanten/standard/core.hpp>\n";
-    ofs << "#include <cstdint>\n";
     ofs << '\n';
     ofs << '\n';
     ofs << "namespace Nyanten::Standard_{\n";
     ofs << '\n';
-    ofs << "inline constexpr std::array<MapValue, Nyanten::Standard_::zipai_size> zipai_map{\n";
+    ofs << "inline constexpr std::array<MapValue, Nyanten::Standard_::zipai_size> zipai_map{";
     for (MapValue const &pack : zipai_map) {
       ofs << pack << "u,";
     }
@@ -343,7 +343,7 @@ int main(int const argc, char const * const * const argv)
     ofs << '\n';
     ofs << "} // namespace Nyanten::Standard_\n";
     ofs << '\n';
-    ofs << "#endif // !defined(NYANTEN_STANDARD_ZIPAI_MAP_HPP_INCLUDE_GUARD)\n";
+    ofs << "#endif // !defined(NYANTEN_SRC_STANDARD_ZIPAI_MAP_HPP_INCLUDE_GUARD)\n";
   }
 
   return EXIT_SUCCESS;

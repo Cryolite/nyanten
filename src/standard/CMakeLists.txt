@@ -27,9 +27,25 @@ add_dependencies(src.standard.build_map
 add_custom_command(
   OUTPUT shupai_map.hpp zipai_map.hpp
   COMMAND ASAN_OPTIONS=handle_abort=1 ./build_map shupai_map.hpp zipai_map.hpp
-  COMMAND cp shupai_map.hpp "${CMAKE_SOURCE_DIR}/nyanten/standard/shupai_map.hpp"
-  COMMAND cp zipai_map.hpp "${CMAKE_SOURCE_DIR}/nyanten/standard/zipai_map.hpp"
+  COMMAND cp shupai_map.hpp "${CMAKE_SOURCE_DIR}/src/standard/shupai_map.hpp"
+  COMMAND cp zipai_map.hpp "${CMAKE_SOURCE_DIR}/src/standard/zipai_map.hpp"
   DEPENDS src.standard.build_map)
 add_custom_target(src.standard.map
   ALL
   DEPENDS shupai_map.hpp zipai_map.hpp)
+
+add_executable(src.standard.build_keys
+  build_keys.cpp)
+set_target_properties(src.standard.build_keys
+  PROPERTIES
+  OUTPUT_NAME build_keys)
+add_dependencies(src.standard.build_keys
+  src.standard.map)
+add_custom_command(
+  OUTPUT keys.hpp
+  COMMAND ASAN_OPTIONS=handle_abort=1 ./build_keys keys.hpp
+  COMMAND cp keys.hpp "${CMAKE_SOURCE_DIR}/nyanten/standard/keys.hpp"
+  DEPENDS src.standard.build_keys)
+add_custom_target(src.standard.keys
+  ALL
+  DEPENDS keys.hpp)
