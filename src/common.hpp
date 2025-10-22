@@ -23,9 +23,9 @@ inline std::mt19937 createRNG()
   return std::mt19937(ss);
 }
 
-inline std::vector<int> createRandomPureHand(std::mt19937 &rng)
+inline std::array<std::uint_fast8_t, 34u> createRandomPureHand(std::mt19937 &rng)
 {
-  std::vector<int> paishan(136u);
+  std::array<std::uint_fast8_t, 136u> paishan{};
   std::iota(paishan.begin(), paishan.end(), 0);
   std::shuffle(paishan.begin(), paishan.end(), rng);
 
@@ -33,8 +33,8 @@ inline std::vector<int> createRandomPureHand(std::mt19937 &rng)
     std::uniform_int_distribution<std::uint_fast8_t> dist(0u, 9u);
     return std::array<std::uint_fast8_t, 10u>{1u, 2u, 4u, 5u, 7u, 8u, 10u, 11u, 13u, 14u}[dist(rng)];
   }();
-  std::vector<int> hand136(paishan.cbegin(), paishan.cbegin() + t);
-  std::vector<int> result(34u, 0);
+  std::vector<std::uint_fast8_t> hand136(paishan.cbegin(), paishan.cbegin() + t);
+  std::array<std::uint_fast8_t, 34u> result{};
   for (int const tile : hand136) {
     ++result[tile / 4];
   }

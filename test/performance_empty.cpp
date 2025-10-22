@@ -7,7 +7,7 @@
 #include <iostream>
 #include <random>
 #include <numeric>
-#include <vector>
+#include <array>
 #include <cstdint>
 #include <cstdlib>
 #include <cstddef>
@@ -42,7 +42,7 @@ int main(int const argc, char const * const * const argv)
   std::mt19937 rng = createRNG();
 
   for (std::size_t i = 0u; i < num_tests; ++i) {
-    std::vector<int> const hand = createRandomPureHand(rng);
+    std::array<std::uint_fast8_t, 34u> const hand = createRandomPureHand(rng);
   }
 
   return EXIT_SUCCESS;

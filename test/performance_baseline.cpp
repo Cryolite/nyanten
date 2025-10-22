@@ -54,9 +54,16 @@ int main(int const argc, char const * const * const argv)
   Calsht calculator;
   calculator.initialize(shanten_number_path.string());
 
-  std::chrono::nanoseconds total_elapsed = std::chrono::nanoseconds::zero();
+  std::vector<std::array<std::uint_fast8_t, 34u>> hands;
+  hands.reserve(num_tests);
   for (std::size_t i = 0u; i < num_tests; ++i) {
-    std::vector<int> const hand = createRandomPureHand(rng);
+    std::array<std::uint_fast8_t, 34u> const hand = createRandomPureHand(rng);
+    hands.push_back(hand);
+  }
+
+  std::chrono::high_resolution_clock::time_point const start = std::chrono::high_resolution_clock::now();
+  for (std::size_t i = 0u; i < num_tests; ++i) {
+    std::array<std::uint_fast8_t, 34u> const hand = hands[i];
     std::uint_fast8_t const n = std::accumulate(hand.cbegin(), hand.cend(), 0u);
     std::uint_fast8_t const m = n / 3u;
 
@@ -64,12 +71,11 @@ int main(int const argc, char const * const * const argv)
     std::copy(hand.cbegin(), hand.cend(), hand_.begin());
 
     std::uint_fast8_t volatile replacement_number;
-    std::chrono::high_resolution_clock::time_point const start = std::chrono::high_resolution_clock::now();
     std::tie(replacement_number, std::ignore) = calculator(hand_, m, 7);
-    std::chrono::high_resolution_clock::time_point const end = std::chrono::high_resolution_clock::now();
-    total_elapsed += std::chrono::duration_cast<std::chrono::nanoseconds>(end - start);
   }
-  std::cout << "Average time: " << total_elapsed.count() / num_tests << " ns" << std::endl;
+  std::chrono::high_resolution_clock::time_point const end = std::chrono::high_resolution_clock::now();
+  std::chrono::nanoseconds const total_elapsed = end - start;
+  std::cout << "Average time: " << total_elapsed.count() / num_tests << " ns / hand" << std::endl;
 
   return EXIT_SUCCESS;
 }

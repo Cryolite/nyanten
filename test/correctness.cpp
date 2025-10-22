@@ -50,7 +50,7 @@ int main(int const argc, char const * const * const argv)
   calculator0.initialize(shanten_number_path.string());
 
   for (std::size_t i = 0u; i < num_tests; ++i) {
-    std::vector<int> const hand = Nyanten::Impl_::createRandomPureHand(rng);
+    std::array<std::uint_fast8_t, 34u> const hand = Nyanten::Impl_::createRandomPureHand(rng);
     std::uint_fast8_t const n = std::accumulate(hand.cbegin(), hand.cend(), 0u);
     std::uint_fast8_t const m = n / 3u;
 
