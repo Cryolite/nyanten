@@ -106,9 +106,8 @@ target_sources(nyanten
     nyanten/standard/core.hpp
     nyanten/standard/shupai_table.hpp
     nyanten/standard/zipai_table.hpp
-    nyanten/standard/shupai_map.hpp
-    nyanten/standard/zipai_map.hpp
     nyanten/standard/hash.hpp
+    nyanten/standard/keys.hpp
     nyanten/standard/replacement_number.hpp
     nyanten/seven_pairs/replacement_number.hpp
     nyanten/thirteen_orphans/replacement_number.hpp
