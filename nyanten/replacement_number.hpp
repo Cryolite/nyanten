@@ -23,22 +23,22 @@ std::uint_fast8_t calculateReplacementNumber(ForwardIterator first, ForwardItera
     std::uint_fast8_t n = 0u;
     for (ForwardIterator iter = first; iter != last; ++iter) {
       if (*iter < 0) {
-        throw std::invalid_argument("An invalid hand.");
+        throw std::invalid_argument("All tile counts must be non-negative.");
       }
       if (*iter > 4) {
-        throw std::invalid_argument("An invalid hand.");
+        throw std::invalid_argument("All tile counts must be less than or equal to 4.");
       }
       ++i;
       n += *iter;
     }
     if (i != 34u) {
-      throw std::invalid_argument("An invalid hand.");
+      throw std::invalid_argument("The number of tile types must be equal to 34.");
     }
     if (n > 14u) {
-      throw std::invalid_argument("An invalid hand.");
+      throw std::invalid_argument("The total number of tiles must be less than or equal to 14.");
     }
     if (n % 3u == 0u) {
-      throw std::invalid_argument("An invalid hand.");
+      throw std::invalid_argument("The total number of tiles must be congruent to 1 or 2 modulo 3.");
     }
     return n;
   }();
