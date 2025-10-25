@@ -41,4 +41,4 @@ set_target_properties(test.standard.performance_proposed
   PROPERTIES
   OUTPUT_NAME performance_proposed)
 add_dependencies(test.standard.performance_proposed
-  src.standard.map)
+  src.standard.keys)
