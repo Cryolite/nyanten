@@ -13,6 +13,7 @@ fi
 
 sudo apt-get -y update
 sudo apt-get -y dist-upgrade
+sudo apt-get -y install --no-install-recommends libtbb-dev
 sudo apt-get clean
 sudo rm -rf /var/lib/apt/lists/*
 
