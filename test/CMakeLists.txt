@@ -22,12 +22,6 @@ else()
     COMMAND env ASAN_OPTIONS=handle_abort=1 ./correctness "${SHANTEN_NUMBER_ROOT}" 10000)
 endif()
 
-add_executable(test.standard.performance_empty
-  performance_empty.cpp)
-set_target_properties(test.standard.performance_empty
-  PROPERTIES
-  OUTPUT_NAME performance_empty)
-
 add_executable(test.standard.performance_baseline
   performance_baseline.cpp
   ${SHANTEN_NUMBER_ROOT}/src/calsht.cpp)
