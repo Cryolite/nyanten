@@ -22,8 +22,7 @@ using Nyanten::Standard_::shupai_keys;
 using Nyanten::Standard_::zipai_keys;
 
 template<typename ForwardIterator>
-std::uint_fast8_t calculateReplacementNumber(
-  ForwardIterator first, ForwardIterator last, std::uint_fast8_t const n)
+std::uint_fast8_t calculateReplacementNumber(ForwardIterator first, std::uint_fast8_t const n)
 {
   std::uint_fast8_t const m = n / 3u;
 

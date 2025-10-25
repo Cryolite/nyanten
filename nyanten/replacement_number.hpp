@@ -43,7 +43,7 @@ std::uint_fast8_t calculateReplacementNumber(ForwardIterator first, ForwardItera
     return n;
   }();
 
-  std::uint_fast8_t const r0 = Nyanten::Standard_::calculateReplacementNumber(first, last, n);
+  std::uint_fast8_t const r0 = Nyanten::Standard_::calculateReplacementNumber(first, n);
   std::uint_fast8_t const r1 = Nyanten::SevenPairs_::calculateReplacementNumber(first, last, n);
   std::uint_fast8_t const r2
     = Nyanten::ThirteenOrphans_::calculateReplacementNumber(first, last, n);
