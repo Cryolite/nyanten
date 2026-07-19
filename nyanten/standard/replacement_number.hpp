@@ -8,8 +8,7 @@
 #include <nyanten/standard/keys.hpp>
 #include <nyanten/standard/hash.hpp>
 #include <nyanten/standard/core.hpp>
-#include <algorithm>
-#include <array>
+#include <iterator>
 #include <cstdint>
 
 
@@ -21,8 +20,8 @@ using Nyanten::Standard_::Key2;
 using Nyanten::Standard_::shupai_keys;
 using Nyanten::Standard_::zipai_keys;
 
-template<typename ForwardIterator>
-std::uint_fast8_t calculateReplacementNumber(ForwardIterator first, std::uint_fast8_t const n)
+template<std::random_access_iterator I>
+std::uint_fast8_t calculateReplacementNumber(I first, std::uint_fast8_t const n)
 {
   std::uint_fast8_t const m = n / 3u;
 

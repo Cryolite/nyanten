@@ -5,14 +5,14 @@
 #if !defined(NYANTEN_SEVEN_PAIRS_REPLACEMENT_NUMBER_HPP_INCLUDE_GUARD)
 #define NYANTEN_SEVEN_PAIRS_REPLACEMENT_NUMBER_HPP_INCLUDE_GUARD
 
+#include <iterator>
 #include <limits>
 #include <cstdint>
 
 namespace Nyanten::SevenPairs_{
 
-template<typename ForwardIterator>
-std::uint_fast8_t calculateReplacementNumber(
-  ForwardIterator first, ForwardIterator last, std::uint_fast8_t const n)
+template<std::input_iterator I, std::sentinel_for<I> S>
+std::uint_fast8_t calculateReplacementNumber(I first, S last, std::uint_fast8_t const n)
 {
   if (n != 13u && n != 14u) {
     return std::numeric_limits<std::uint_fast8_t>::max();

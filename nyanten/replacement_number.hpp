@@ -10,18 +10,20 @@
 #include <nyanten/standard/replacement_number.hpp>
 #include <algorithm>
 #include <iterator>
+#include <ranges>
+#include <stdexcept>
 #include <cstdint>
 
 
 namespace Nyanten{
 
-template<typename ForwardIterator>
-std::uint_fast8_t calculateReplacementNumber(ForwardIterator first, ForwardIterator last)
+template<std::random_access_iterator I, std::sentinel_for<I> S>
+std::uint_fast8_t calculateReplacementNumber(I first, S last)
 {
   std::uint_fast8_t const n = [&]() {
     std::uint_fast8_t i = 0u;
     std::uint_fast8_t n = 0u;
-    for (ForwardIterator iter = first; iter != last; ++iter) {
+    for (I iter = first; iter != last; ++iter) {
       if (*iter < 0) {
         throw std::invalid_argument("All tile counts must be non-negative.");
       }
@@ -50,10 +52,11 @@ std::uint_fast8_t calculateReplacementNumber(ForwardIterator first, ForwardItera
   return std::min({r0, r1, r2});
 }
 
-template<typename ForwardRange>
-std::uint_fast8_t calculateReplacementNumber(ForwardRange const &r)
+template<typename R>
+requires std::ranges::random_access_range<R const>
+std::uint_fast8_t calculateReplacementNumber(R const &r)
 {
-  return Nyanten::calculateReplacementNumber(std::cbegin(r), std::cend(r));
+  return Nyanten::calculateReplacementNumber(std::ranges::cbegin(r), std::ranges::cend(r));
 }
 
 } // namespace Nyanten

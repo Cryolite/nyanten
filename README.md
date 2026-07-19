@@ -25,11 +25,11 @@ int main()
 
 # Interfaces
 
-### `template<typename ForwardIterator>`<br/>`std::uint_fast8_t Nyanten::calculateReplacementNumber(ForwardIterator first, ForwardIterator last)`
+### `template<std::random_access_iterator I, std::sentinel_for<I> S>`<br/>`std::uint_fast8_t Nyanten::calculateReplacementNumber(I first, S last)`
 
 #### Preconditions
 
-- `std::distance(first, last) == 34`
+- `[first, last)` is a valid range containing exactly 34 elements.
 - For every `iter` in the range `[first, last)`, `0 <= *iter` and `*iter <= 4`
 - The sum of the numbers in the range `[first, last)` is less or equal to 14.
 - The sum of the numbers in the range `[first, last)` is congruent to 1 or 2 modulo 3.
@@ -54,6 +54,6 @@ Calculate the replacement number, which is equal to the deficiency number (a.k.a
 |-------|-------|-------|-------|-------|-----------|-----------|---------|
 | Tile  | 🀀 (E) | 🀁 (S) | 🀂 (W) | 🀃 (N) | 🀆 (White) | 🀅 (Green) | 🀄 (Red) |
 
-### `template<typename ForwardRange>`<br/>`std::uint_fast8_t Nyanten::calculateReplacementNumber(ForwardRange const &r)`
+### `template<typename R>`<br/>`requires std::ranges::random_access_range<R const>`<br/>`std::uint_fast8_t Nyanten::calculateReplacementNumber(R const &r)`
 
-Call `Nyanten::calculateReplacementNumber(std::cbegin(r), std::cend(r))`.
+Call `Nyanten::calculateReplacementNumber(std::ranges::cbegin(r), std::ranges::cend(r))`.

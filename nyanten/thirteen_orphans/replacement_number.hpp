@@ -12,9 +12,8 @@
 
 namespace Nyanten::ThirteenOrphans_{
 
-template<typename ForwardIterator>
-std::uint_fast8_t calculateReplacementNumber(
-  ForwardIterator first, ForwardIterator last, std::uint_fast8_t const n)
+template<std::input_iterator I, std::sentinel_for<I> S>
+std::uint_fast8_t calculateReplacementNumber(I first, S last, std::uint_fast8_t const n)
 {
   if (n != 13u && n != 14) {
     return std::numeric_limits<std::uint_fast8_t>::max();

@@ -34,6 +34,7 @@
         "memory_resource": "cpp",
         "numeric": "cpp",
         "random": "cpp",
+        "ranges": "cpp",
         "ratio": "cpp",
         "string_view": "cpp",
         "system_error": "cpp",
